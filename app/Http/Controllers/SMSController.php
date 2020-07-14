@@ -15,6 +15,14 @@ class SMSController extends Controller
             'from' => env('NEXMO_NUMBER'),
             'text' => $request->message
             ]);
-        return 'sent';
+        $save = sms::create([
+            'full_names' => $request->full_names,
+            'phone_number' => $request->phone_number,
+            'content' => $request->message,
+        ]);
+        if($save)
+            return redirect()->back()->with(['success'=>'Message sent successfully to '.$request->full_names]);
+        else
+            return redirect()->back()->with(['error'=>'Message not sent']);
     }
 }
